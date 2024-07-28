@@ -23,7 +23,7 @@ similar_chars = load_yaml_config(config_path)['similar_chars']
 
 def generate_domains(base_domain: str) -> List[str]:
     """Generate all possible similar looking domain names."""
-    base_part = base_domain[:-4]  # 去除 '.com'
+    base_part = base_domain[:-4]
     combinations = itertools.product(*(similar_chars.get(char, [char]) for char in base_part))
     return [''.join(combination) + '.com' for combination in combinations]
 
@@ -57,7 +57,7 @@ def check_domain_availability(domain: str, max_retries: int = 5) -> str:
 
 
 def main(base_domain):
-    domains = generate_domains(base_domain)
+    domains = list(set(generate_domains(base_domain)))
 
     table = PrettyTable()
     table.field_names = ["Original Domain", "Punycode", "Availability"]
@@ -65,7 +65,7 @@ def main(base_domain):
     table.align["Punycode"] = "l"
     table.align["Availability"] = "l"
 
-    print("Checking domain availability...")
+    # print("Checking domain availability...")
     print(table.field_names)
     print("-" * (sum(len(field) for field in table.field_names) + 6))
 
